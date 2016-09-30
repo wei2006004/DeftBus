@@ -28,17 +28,17 @@ public class DBus {
                 list.add(action);
             }
         }
-        innerRegister(recieverObject, recieverClass, (String[]) list.toArray());
+        innerRegister(recieverObject, recieverClass, list.isEmpty() ? null : (String[]) list.toArray());
     }
 
     private static <T> void innerRegister(T recieverObject, Class<T> recieverClass, String[] actions) {
         assertRecieverClass(recieverClass);
-        RecieverMap.getInstance().registerReciever(recieverObject, recieverClass, actions);
+        SignalHandler.getInstance().registerReciever(recieverObject, recieverClass, actions);
     }
 
     public static <T> void unregister(T recieverObject, Class<T> recieverClass) {
         assertRecieverClass(recieverClass);
-        RecieverMap.getInstance().unregisterReciever(recieverObject, recieverClass);
+        SignalHandler.getInstance().unregisterReciever(recieverObject, recieverClass);
     }
 
     private static void assertRecieverClass(Class recieverClass) {
@@ -48,6 +48,6 @@ public class DBus {
     }
 
     public static void unInst(){
-        RecieverMap.unInst();
+        SignalHandler.unInst();
     }
 }
