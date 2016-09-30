@@ -47,11 +47,7 @@ class SignalHandler {
         }
         List<RecieverEntry> entries = mMap.get(recieverClass);
         if (actions == null || actions.length == 0){
-            entries.clear();
             entries.add(new GlobalRecieverEntry<>(recieverObject));
-            return;
-        }
-        if (entries.get(0) instanceof GlobalRecieverEntry){
             return;
         }
         RecieverEntry<T> recieverEntry = null;
@@ -100,8 +96,15 @@ class SignalHandler {
         if (!mMap.containsKey(recieverClass)){
             return;
         }
+        boolean isGrobal = (action == null) ? true : false;
         List<RecieverEntry> entries = mMap.get(recieverClass);
         for (RecieverEntry entry : entries){
+            if (isGrobal){
+                if (entry instanceof GlobalRecieverEntry){
+                    entry.handleSignal(method, args);
+                }
+                continue;
+            }
             if (entry.supportAction(action)){
                 entry.handleSignal(method, args);
             }
