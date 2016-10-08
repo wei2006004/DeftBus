@@ -1,12 +1,13 @@
 package com.deft.bus.reciever;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by Administrator on 2016/9/30.
  */
 public class ActionRecieverEntry<T> extends WeakReferenceRecieverEntry<T> {
-    private Set<String> mActions;
+    private Set<String> mActions = new HashSet<>();
 
     public ActionRecieverEntry(T reciever, String[] actions) {
         super(reciever);

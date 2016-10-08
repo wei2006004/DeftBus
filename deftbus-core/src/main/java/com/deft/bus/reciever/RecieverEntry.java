@@ -12,5 +12,5 @@ public interface RecieverEntry<T> {
 
     boolean supportAction(String actions);
 
-    void handleSignal(Method method, Object[] args) throws Throwable;
+    void handleSignal(Method method, Object[] args) throws Exception;
 }

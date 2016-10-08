@@ -24,7 +24,7 @@ public abstract class WeakReferenceRecieverEntry<T> implements RecieverEntry<T>{
     }
 
     @Override
-    public void handleSignal(Method method, Object[] args) throws Throwable {
+    public void handleSignal(Method method, Object[] args) throws Exception {
         T reciever = mReciever.get();
         if (reciever != null){
             method.invoke(reciever, args);

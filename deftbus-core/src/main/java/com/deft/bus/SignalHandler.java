@@ -92,7 +92,7 @@ class SignalHandler {
         }
     }
 
-    <T> void handleSignal(Class<T> recieverClass, String action, Method method, Object[] args) throws Throwable{
+    <T> void handleSignal(Class<T> recieverClass, String action, Method method, Object[] args) throws Exception{
         if (!mMap.containsKey(recieverClass)){
             return;
         }
