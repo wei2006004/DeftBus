@@ -1,5 +1,7 @@
 package com.deft.bus.reciever;
 
+import com.deft.bus.ICall;
+import com.deft.bus.TestCall;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,17 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Created by Administrator on 2016/10/8.
  */
 public class RecieverEntryTest {
-    public interface ICall{
-        void call(String arg);
-    }
-
-    class TestCall implements ICall{
-        String text = "";
-        @Override
-        public void call(String arg) {
-            text = arg;
-        }
-    }
 
     ActionRecieverEntry<TestCall> entry;
     TestCall testCall;

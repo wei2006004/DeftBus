@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SignalHandlerTest {
 
     @Before
-    public void setUp(){
+    public void setUp() throws Exception {
         LogUtils.setDebug(true);
     }
 
@@ -39,7 +39,7 @@ public class SignalHandlerTest {
         assertThat(map).isEmpty();
 
         String string = "hhh";
-        Integer integer =2;
+        Integer integer = 2;
         Boolean bool = false;
         Byte byte1 = 3;
         Byte byte2 = 4;
@@ -66,7 +66,7 @@ public class SignalHandlerTest {
         handler.registerReciever(byte2, Byte.class, new String[]{"11", "22", "33", "dd"});
         assertThat(map.get(Byte.class).size()).isEqualTo(2);
         ActionRecieverEntry entry2 = (ActionRecieverEntry) map.get(Byte.class).get(0);
-        if (entry1 == entry2){
+        if (entry1 == entry2) {
             entry2 = (ActionRecieverEntry) map.get(Byte.class).get(1);
         }
         assertTrue(entry2.supportAction("11"));
@@ -76,7 +76,7 @@ public class SignalHandlerTest {
         assertFalse(entry2.supportAction(""));
         assertFalse(entry2.supportAction("aa"));
 
-        handler.registerReciever((byte)4, Byte.class, new String[]{"aa", "bb", "33", "dd"});
+        handler.registerReciever((byte) 4, Byte.class, new String[]{"aa", "bb", "33", "dd"});
         assertThat(map.get(Byte.class).size()).isEqualTo(2);
         assertTrue(entry2.supportAction("11"));
         assertTrue(entry2.supportAction("22"));
@@ -94,27 +94,27 @@ public class SignalHandlerTest {
         TestCall testCall5 = new TestCall();
 
         handler.registerReciever(testCall1, ICall.class, new String[]{""});
-        handler.registerReciever(testCall2, ICall.class, new String[]{"aa","cc","ad","dcd"});
+        handler.registerReciever(testCall2, ICall.class, new String[]{"aa", "cc", "ad", "dcd"});
         handler.registerReciever(testCall3, ICall.class, null);
-        handler.registerReciever(testCall4, ICall.class, new String[]{"sd","ccs"});
-        handler.registerReciever(testCall5, ICall.class, new String[]{"sec","ffa"});
+        handler.registerReciever(testCall4, ICall.class, new String[]{"sd", "ccs"});
+        handler.registerReciever(testCall5, ICall.class, new String[]{"sec", "ffa"});
         assertThat(map.get(ICall.class).size()).isEqualTo(5);
 
-        handler.registerReciever(testCall3, ICall.class, new String[]{"sd","ccs"});
+        handler.registerReciever(testCall3, ICall.class, new String[]{"sd", "ccs"});
         handler.registerReciever(testCall4, ICall.class, null);
-        handler.registerReciever(testCall4, ICall.class, new String[]{"we","1212"});
-        handler.registerReciever(testCall5, ICall.class, new String[]{"255","dd"});
-        handler.registerReciever(testCall5, ICall.class, new String[]{"we","1212"});
+        handler.registerReciever(testCall4, ICall.class, new String[]{"we", "1212"});
+        handler.registerReciever(testCall5, ICall.class, new String[]{"255", "dd"});
+        handler.registerReciever(testCall5, ICall.class, new String[]{"we", "1212"});
         assertThat(map.get(ICall.class).size()).isEqualTo(5);
 
         SignalHandler.unInst();
     }
 
     @SuppressWarnings("unchecked")
-    private static Map<Class, List<RecieverEntry>> getHandlerData(SignalHandler handler) throws Exception{
+    private static Map<Class, List<RecieverEntry>> getHandlerData(SignalHandler handler) throws Exception {
         Field field = SignalHandler.class.getDeclaredField("mMap");
         field.setAccessible(true);
-        return  (Map<Class, List<RecieverEntry>>) field.get(handler);
+        return (Map<Class, List<RecieverEntry>>) field.get(handler);
     }
 
     @Test
@@ -133,10 +133,10 @@ public class SignalHandlerTest {
         TestCall testCall5 = new TestCall();
 
         handler.registerReciever(testCall1, ICall.class, new String[]{""});
-        handler.registerReciever(testCall2, ICall.class, new String[]{"aa","cc","ad","dcd"});
+        handler.registerReciever(testCall2, ICall.class, new String[]{"aa", "cc", "ad", "dcd"});
         handler.registerReciever(testCall3, ICall.class, null);
-        handler.registerReciever(testCall4, ICall.class, new String[]{"sd","ccs"});
-        handler.registerReciever(testCall5, ICall.class, new String[]{"sec","ffa"});
+        handler.registerReciever(testCall4, ICall.class, new String[]{"sd", "ccs"});
+        handler.registerReciever(testCall5, ICall.class, new String[]{"sec", "ffa"});
         assertThat(map.get(ICall.class).size()).isEqualTo(5);
 
         testCall1 = null;
@@ -165,7 +165,7 @@ public class SignalHandlerTest {
         assertThat(map.size()).isEqualTo(4);
         assertThat(map.get(Byte.class).size()).isEqualTo(4);
 
-        handler.unregisterReciever((byte)1, Byte.class);
+        handler.unregisterReciever((byte) 1, Byte.class);
         assertThat(map.size()).isEqualTo(4);
         assertThat(map.get(Byte.class).size()).isEqualTo(3);
 
@@ -181,19 +181,19 @@ public class SignalHandlerTest {
         handler.unregisterReciever(5, Integer.class);
         assertThat(map.size()).isEqualTo(2);
 
-        handler.unregisterReciever((byte)5, Byte.class);
+        handler.unregisterReciever((byte) 5, Byte.class);
         assertThat(map.size()).isEqualTo(2);
         assertThat(map.get(Byte.class).size()).isEqualTo(3);
 
-        handler.unregisterReciever((byte)2, Byte.class);
+        handler.unregisterReciever((byte) 2, Byte.class);
         assertThat(map.size()).isEqualTo(2);
         assertThat(map.get(Byte.class).size()).isEqualTo(2);
 
-        handler.unregisterReciever((byte)3, Byte.class);
+        handler.unregisterReciever((byte) 3, Byte.class);
         assertThat(map.size()).isEqualTo(2);
         assertThat(map.get(Byte.class).size()).isEqualTo(1);
 
-        handler.unregisterReciever((byte)4, Byte.class);
+        handler.unregisterReciever((byte) 4, Byte.class);
         assertThat(map.size()).isEqualTo(1);
 
         SignalHandler.unInst();
@@ -215,8 +215,8 @@ public class SignalHandlerTest {
         handler.registerReciever(byte2, Byte.class, new String[]{"11", "cc", "33", "dd"});
         handler.registerReciever(byte3, Byte.class, new String[]{"aa", "ll", "kk"});
         handler.registerReciever(byte4, Byte.class, new String[]{"11", "hh", "jj", "dd"});
-        handler.registerReciever((byte)4, Byte.class, new String[]{"aa", "bb", "33", "dd"});
-        handler.registerReciever((byte)4, Byte.class, new String[]{"11", "99", "33", "55"});
+        handler.registerReciever((byte) 4, Byte.class, new String[]{"aa", "bb", "33", "dd"});
+        handler.registerReciever((byte) 4, Byte.class, new String[]{"11", "99", "33", "55"});
     }
 
     @Test
@@ -236,17 +236,17 @@ public class SignalHandlerTest {
         TestCall testCall5 = new TestCall();
 
         handler.registerReciever(testCall1, ICall.class, new String[]{""});
-        handler.registerReciever(testCall2, ICall.class, new String[]{"aa","cc","ad","dcd"});
+        handler.registerReciever(testCall2, ICall.class, new String[]{"aa", "cc", "ad", "dcd"});
         handler.registerReciever(testCall3, ICall.class, null);
-        handler.registerReciever(testCall4, ICall.class, new String[]{"sd","ccs"});
-        handler.registerReciever(testCall5, ICall.class, new String[]{"sec","ffa"});
+        handler.registerReciever(testCall4, ICall.class, new String[]{"sd", "ccs"});
+        handler.registerReciever(testCall5, ICall.class, new String[]{"sec", "ffa"});
         assertThat(map.get(ICall.class).size()).isEqualTo(5);
 
-        handler.registerReciever(testCall3, ICall.class, new String[]{"aa","ccs"});
+        handler.registerReciever(testCall3, ICall.class, new String[]{"aa", "ccs"});
         handler.registerReciever(testCall4, ICall.class, null);
-        handler.registerReciever(testCall4, ICall.class, new String[]{"we","1212"});
-        handler.registerReciever(testCall5, ICall.class, new String[]{"255","dd"});
-        handler.registerReciever(testCall5, ICall.class, new String[]{"aa","1212"});
+        handler.registerReciever(testCall4, ICall.class, new String[]{"we", "1212"});
+        handler.registerReciever(testCall5, ICall.class, new String[]{"255", "dd"});
+        handler.registerReciever(testCall5, ICall.class, new String[]{"aa", "1212"});
         assertThat(map.get(ICall.class).size()).isEqualTo(5);
         assertThat(testCall1.text).isEmpty();
         assertThat(testCall2.text).isEmpty();
@@ -285,18 +285,6 @@ public class SignalHandlerTest {
         assertThat(testCall5.text).isEqualTo("333");
 
         SignalHandler.unInst();
-    }
-
-    public interface ICall{
-        void call(String arg);
-    }
-
-    class TestCall implements ICall{
-        String text = "";
-        @Override
-        public void call(String arg) {
-            text = arg;
-        }
     }
 
 }
