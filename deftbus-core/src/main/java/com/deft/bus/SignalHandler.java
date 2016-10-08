@@ -5,13 +5,11 @@ import com.deft.bus.reciever.GlobalRecieverEntry;
 import com.deft.bus.reciever.RecieverEntry;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.deft.bus.log.LogUtils.log;
+import static com.deft.bus.utils.TextUtils.convertStringArrayToText;
 
 /**
  * Created by Administrator on 2016/9/30.
@@ -49,13 +47,6 @@ class SignalHandler {
             log(this, "[registerReciever] add class( " + recieverClass + " ) to map.");
         }
         List<RecieverEntry> entries = mMap.get(recieverClass);
-        if (actions == null || actions.length == 0) {
-            entries.add(new GlobalRecieverEntry<>(recieverObject));
-            log(this, "[registerReciever] add global entry, class:" + recieverClass
-                    + ", action:" + actions
-                    + ", object:" + recieverObject);
-            return;
-        }
         RecieverEntry<T> recieverEntry = null;
         for (RecieverEntry<T> entry : entries) {
             T value = entry.getReciever();
@@ -64,16 +55,30 @@ class SignalHandler {
                 break;
             }
         }
+        if (actions == null || actions.length == 0) {
+            if (recieverEntry != null){
+                entries.remove(recieverEntry);
+            }
+            entries.add(new GlobalRecieverEntry<>(recieverObject));
+            log(this, "[registerReciever] add global entry, class:" + recieverClass
+                    + ", actions:" + convertStringArrayToText(actions)
+                    + ", object:" + recieverObject);
+            return;
+        }
         if (recieverEntry == null) {
             entries.add(0, new ActionRecieverEntry<>(recieverObject, actions));
             log(this, "[registerReciever] add action entry, class:" + recieverClass
-                    + ", action:" + actions
+                    + ", actions:" + convertStringArrayToText(actions)
                     + ", object:" + recieverObject);
         } else {
             if (recieverEntry instanceof ActionRecieverEntry) {
                 ((ActionRecieverEntry) recieverEntry).addActions(actions);
                 log(this, "[registerReciever] add actions, class:" + recieverClass
-                        + ", action:" + actions
+                        + ", actions:" + convertStringArrayToText(actions)
+                        + ", object:" + recieverObject);
+            } else {
+                log(this, "[registerReciever] add actions when global, do nothing, class:" + recieverClass
+                        + ", actions:" + convertStringArrayToText(actions)
                         + ", object:" + recieverObject);
             }
         }
@@ -99,7 +104,13 @@ class SignalHandler {
     private void clearNotAvailableRecieverEntry() {
         for (Map.Entry<Class, List<RecieverEntry>> classEntry : mMap.entrySet()) {
             List<RecieverEntry> entries = classEntry.getValue();
-            entries.stream().filter(entry -> !entry.isAvailable()).forEach(entries::remove);
+            Iterator<RecieverEntry> iterator = entries.iterator();
+            while (iterator.hasNext()){
+                RecieverEntry entry = iterator.next();
+                if (!entry.isAvailable()){
+                    iterator.remove();
+                }
+            }
             if (entries.isEmpty()) {
                 mMap.remove(classEntry.getKey());
                 log(this, "[clearNotAvailableRecieverEntry] remove reciver class, class:" + classEntry.getKey());
