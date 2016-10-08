@@ -52,6 +52,7 @@ public class SenderCreatorTest {
         ICall sender1 = SenderCreator.createSenderByAction(ICall.class, "");
         ICall sender2 = SenderCreator.createSenderByAction(ICall.class, "aa");
         ICall sender3 = SenderCreator.createSenderByAction(ICall.class, "1212");
+        ICall sender4 = SenderCreator.createSenderByAction(ICall.class, null);
 
         sender1.call("111");
         assertThat(testCall1.text).isEqualTo("111");
@@ -73,6 +74,13 @@ public class SenderCreatorTest {
         assertThat(testCall3.text).isEqualTo("333");
         assertThat(testCall4.text).isEqualTo("333");
         assertThat(testCall5.text).isEqualTo("333");
+
+        sender4.call("444");
+        assertThat(testCall1.text).isNotEqualTo("444");
+        assertThat(testCall2.text).isNotEqualTo("444");
+        assertThat(testCall3.text).isEqualTo("444");
+        assertThat(testCall4.text).isEqualTo("444");
+        assertThat(testCall5.text).isNotEqualTo("444");
 
         SignalHandler.unInst();
     }

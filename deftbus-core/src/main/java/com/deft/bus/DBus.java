@@ -18,6 +18,7 @@ public class DBus {
     public static <T> void register(T recieverObject, Class<T> recieverClass, Class[] senders, String[] actions) {
         if (senders == null || senders.length == 0) {
             innerRegister(recieverObject, recieverClass, actions);
+            return;
         }
         List list = new ArrayList<String>();
         for (Class clazz : senders) {
@@ -28,7 +29,7 @@ public class DBus {
                 list.add(action);
             }
         }
-        innerRegister(recieverObject, recieverClass, list.isEmpty() ? null : (String[]) list.toArray());
+        innerRegister(recieverObject, recieverClass, list.isEmpty() ? null : (String[]) list.toArray(new String[]{}));
     }
 
     private static <T> void innerRegister(T recieverObject, Class<T> recieverClass, String[] actions) {
@@ -47,7 +48,7 @@ public class DBus {
         }
     }
 
-    public static void unInst(){
+    public static void unInst() {
         SignalHandler.unInst();
     }
 }
